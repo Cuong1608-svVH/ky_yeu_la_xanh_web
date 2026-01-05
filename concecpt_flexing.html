@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+        <title>Concept Flexing</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <style>
+          /* ===== ALBUM CAROUSEL ===== */
+.album-section{
+  width: 60%;
+  margin: 20px auto 60px; 
+  font-family: 'Montserrat', sans-serif;
+}
+.album-title{
+  text-align: center;
+  color: #145436;
+  letter-spacing: 2px;
+  margin: 18px 0 18px;
+}
+
+/* khung tổng */
+.album-carousel{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+/* Tắt transition đúng khoảnh khắc teleport để không bị giật khi wrap */
+.album-carousel.is-snapping,
+.album-carousel.is-snapping *{
+  transition: none !important;
+}
+
+/* vùng nhìn thấy */
+.car-viewport{
+  overflow: hidden;
+  flex: 1;
+  border-radius: 18px;
+}
+
+/* track trượt */
+.car-track{
+  display: flex;
+  will-change: transform;
+  transition: transform 420ms ease;
+}
+
+/* mỗi slide = 1/3 viewport */
+.car-track{ display:flex; gap:20px; }
+.car-slide{ flex: 0 0 calc((100% - 40px)/3); padding:0; }
+
+
+
+.car-slide img{
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  border-radius: 16px;
+  transform: scale(0.92);
+  opacity: 0.78;
+  transition: transform 240ms ease, opacity 240ms ease;
+}
+
+/* slide trung tâm */
+.car-slide.is-center img{
+  transform: scale(1.06);
+  opacity: 1;
+}
+
+/* nút trái phải */
+.car-btn{
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: rgba(20,84,54,0.92);
+  color: #fff;
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+}
+.car-btn:hover{ filter: brightness(1.08); }
+
+/* swipe mượt hơn + tránh browser hiểu là drag để scroll ngang */
+.car-viewport{ touch-action: pan-y; } /* vẫn cho scroll dọc, ưu tiên pan-y */
+
+/* ===== VIEWER (modal) ===== */
+.gallery-viewer{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 99999;
+}
+.gallery-viewer.show{ display: flex; }
+
+.gv-stage{
+  position: relative;
+  margin: 0;
+  max-width: min(1200px, 92vw);
+  max-height: 84vh;
+}
+.gv-stage img{
+  width: 100%;
+  height: auto;
+  max-height: 84vh;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #111;
+  display: block;
+}
+.gv-counter{
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 14px;
+}
+
+.gv-close{
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  font-size: 30px;
+  line-height: 46px;
+  cursor: pointer;
+}
+
+.gv-nav{
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(255,255,255,0.14);
+  font-size: 22px;
+}
+.gv-prev{ margin-right: 12px; }
+.gv-next{ margin-left: 12px; }
+#whyUsConcept{
+  width: 60%;
+  margin: 0 auto;
+}
+#whyUsConcept .why-us__container{
+  width: 90%;
+  margin: 0 auto;
+}
+
+
+
+/* có thể bạn quan tâm */
+.related-section{
+  width: 60%;
+  margin: 30px auto 60px;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+}
+
+.related-sub{
+  margin: 6px 0;
+  color: #4b4b4b;
+  font-size: 18px;
+
+}
+
+.related-grid{
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.related-card{
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 26px rgba(0,0,0,0.10);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.related-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.14);
+}
+
+.related-thumb{
+  
+  background: #f2f2f2;
+}
+
+.related-thumb img{
+  width: 100%;
+  height: 100%;
+  object-fit: initial;
+  display: block;
+}
+
+.related-body{
+  padding: 14px 14px 18px;
+}
+
+.related-title{
+  margin: 8px 0 6px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #145436;
+  text-transform: uppercase;
+}
+
+.related-desc{
+  margin: 0;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* responsive */
+@media (max-width: 900px){
+  .related-section{ width: 95%; }
+  .related-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* Mobile */
+@media (max-width: 900px){
+  .album-section{ width: 95%; }
+  .car-track{ gap: 12px; } /* thay vì padding */
+  .car-slide{ flex: 0 0 calc((100% - 24px)/3); padding: 0; }
+  .car-btn{ width: 38px; height: 38px; }
+  #whyUsConcept{
+  width: 100%;
+  margin: 0 auto;
+}
+.related-grid{ grid-template-columns: 1fr; }
+.related-sub{
+  font-size: 15px;
+}
+}
+  
+        </style>
+        <!-- navbar -->
+<nav class="navbar navbar--hero" id="navbar">
+    <div class="navbar-inner">
+  
+      <!-- LEFT: desktop -->
+      <ul class="nav-left" id="navLeft">
+        <li><a href="index.html">Trang chủ</a></li>
+  
+        <li class="dropdown">
+          <a href="bang_gia.html">
+            <span>Bảng giá</span>
+            <i class="fa-solid fa-chevron-down dropdown-toggle-icon"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="bang_gia_Da_Nang.html">Đà Nẵng</a></li>
+            <li><a href="bang_gia_Quang_Ngai.html">Quảng Ngãi</a></li>
+            <li><a href="bang_gia_cac_tinh_khac.html">Các tỉnh khác</a></li>
+          </ul>
+        </li>
+      </ul>
+  
+      <!-- CENTER: Logo -->
+      <a href="index.html" class="logo-center" aria-label="Trang chủ">
+        <img src="anh/header_logo_.png" alt="Kỉ yếu lá xanh">
+      </a>
+  
+      <!-- RIGHT: desktop -->
+      <ul class="nav-right" id="navRight">
+        <li class="dropdown">
+          <a href="trang_phuc.html">
+            <span>Trang phục</span>
+            
+          </a>
+           
+        </li>
+  
+        <li><a href="concept.html">Concept</a></li>
+  
+        <li class="hotline-inline">
+          <a href="tel:0702710096">
+            <i class="fa-solid fa-phone"></i> 0702.710.096
+          </a>
+        </li>
+      </ul>
+  
+      <!-- Hamburger (mobile) -->
+      <div class="hamburger" id="hamburger" aria-label="Menu" aria-controls="navbar-menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </div>
+  
+    </div>
+  </nav>
+  
+  <!-- Overlay cho mobile (để ngoài nav cho chắc chắn phủ full màn hình) -->
+  <div class="overlay" id="overlay"></div>
+  
+  <!-- Mobile sidebar menu (NEW) -->
+  <ul class="navbar-menu" id="navbar-menu">
+    <li><a href="index.html">Trang chủ</a></li>
+  
+    <li class="dropdown">
+      <a href="bang_gia.html">
+        <span>Bảng giá</span>
+        <i class="fa-solid fa-chevron-down dropdown-toggle-icon"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="bang_gia_Da_Nang.html">Đà Nẵng</a></li>
+        <li><a href="bang_gia_Quang_Ngai.html">Quảng Ngãi</a></li>
+        <li><a href="bang_gia_cac_tinh_khac.html">Các tỉnh khác</a></li>
+      </ul>
+    </li>
+  
+    <li class="dropdown">
+      <a href="trang_phuc.html">
+        <span>Trang phục</span>
+         
+      </a>
+       
+    </li>
+  
+    <li><a href="concept.html">Concept</a></li>
+  </ul>
+  
+    
+     <!-- end navbar -->
+    <section class="service-intro">
+        <h2>CONCEPT FLEXING</h2>
+        <p>Với nhiều năm kinh nghiệm trong lĩnh vực chụp ảnh cùng với đội ngũ nhiếp ảnh chuyên nghiệp, nhiệt tình, sáng tạo. Kỷ yếu Lá Xanh chính là lựa chọn hoàn hảo cho bạn. Với phương châm tận tâm làm tốt từ những việc nhỏ nhất đem đến sự hài lòng cho khách hàng. Mộc Studio kỹ càng chỉn chu từ việc chuẩn bị trang phục kỷ yếu, phụ kiện để các bạn lên mình được đẹp nhất. Luôn nhiệt tình, sáng tạo và chuyên nghiệp trong khâu chụp ảnh, cũng như kỹ càng trong khâu hậu kỳ để các bạn nhận về một sản phẩm hoàn hảo nhất!
+        !</p>
+        <p>
+            Chúng tôi sẽ giúp bạn lưu giữ những khoảnh khắc đáng nhớ nhất thời thanh xuân của mình
+        </p>
+    </section>
+    <!-- call và zalo  -->
+<div class="contact-buttons">
+    <!-- call  -->
+    <a href="tel:0702710096" class="contact-btn contact-btn--call">
+        <i class="fa-solid fa-phone"></i>
+        <span>CALL</span>
+    </a>
+    <!-- zalo  -->
+    <a class="contact-btn contact-btn--zalo" href="https://zalo.me/0702710096" target="_blank" rel="noopener">
+        <i class="fa-solid fa-user"></i>
+        <span>ZALO (24/7)</span>
+      </a>
+</div>
+<!-- album ảnh -->
+<section class="album-section">
+    <h2 class="album-title">ALBUM ẢNH</h2>
+  
+    <div class="album-carousel" id="albumCarousel" aria-label="Album carousel">
+      <button class="car-btn prev" type="button" aria-label="Ảnh trước">&#10094;</button>
+  
+      <div class="car-viewport">
+        <div class="car-track" id="carTrack">
+          <!-- 10 ảnh link  -->
+          <a href="concept_flexing/flexing1.jpg" class="car-slide"> 
+            <img src=" concept_flexing/flexing1.jpg" alt="Concept Flexing 1">
+          </a>
+  
+          <a href=" concept_flexing/flexing2.jpg" class="car-slide">
+            <img src=" concept_flexing/flexing2.jpg" alt="Concept Flexing 2">
+          </a>
+  
+          <a href=" concept_flexing/flexing3.jpg" class="car-slide">
+            <img src=" concept_flexing/flexing3.jpg" alt="Concept Flexing 3">
+          </a>
+  
+          <a href=" concept_flexing/flexing4.jpg" class="car-slide">
+            <img src=" concept_flexing/flexing4.jpg" alt="Concept Flexing 4">
+          </a>
+  
+          <a href=" concept_flexing/flexing5.jpg" class="car-slide">
+            <img src=" concept_flexing/flexing5.jpg" alt="Concept Flexing 5">
+          </a>
+  
+          <a href=" concept_flexing/flexing6.jpg" class="car-slide">
+            <img src=" concept_flexing/flexing6.jpg" alt="Concept Flexing 6">
+          </a>
+  
+          <a href=" concept_flexing/flexing7.jpg" class="car-slide">
+            <img src=" concept_flexing/flexing7.jpg" alt="Concept Flexing 7">
+          </a>
+  
+          <a href=" concept_flexing/flexing8.jpg" class="car-slide">
+            <img src=" concept_flexing/flexing8.jpg" alt="Concept Flexing 8">
+          </a>
+  
+          <a href=" concept_flexing/flexing9.jpg" class="car-slide">
+            <img src=" concept_flexing/flexing9.jpg" alt="Concept Flexing 9">
+          </a>
+  
+          <a href=" concept_flexing/flexing10.jpg" class="car-slide">
+            <img src=" concept_flexing/flexing10.jpg" alt="Concept Flexing 10">
+          </a>
+        </div>
+      </div>
+  
+      <button class="car-btn next" type="button" aria-label="Ảnh tiếp theo">&#10095;</button>
+    </div>
+  </section>
+  
+  <!-- viewer gallery (modal) -->
+  <div class="gallery-viewer" id="galleryViewer" aria-hidden="true">
+    <button class="gv-close" id="gvClose" type="button" aria-label="Đóng">&times;</button>
+    <button class="gv-nav gv-prev" id="gvPrev" type="button" aria-label="Ảnh trước">&#10094;</button>
+  
+    <figure class="gv-stage">
+      <img id="gvImg" alt="">
+      <figcaption class="gv-counter" id="gvCounter">1/10</figcaption>
+    </figure>
+  
+    <button class="gv-nav gv-next" id="gvNext" type="button" aria-label="Ảnh tiếp theo">&#10095;</button>
+  </div>
+  
+  <!-- có thể bạn quan tâm -->
+ <section class="related-section">
+  <h2 class="album-title">CÓ THỂ BẠN QUAN TÂM</h2>
+  <p class="related-sub">Kỉ yếu Lá Xanh - Nơi lưu giữ khoảnh khắc đẹp và ấn tượng nhất</p>
+  <p class="related-sub">Chất lượng – Uy tín – Nhiệt huyết làm nên phong cách chuyên nghiệp</p>
+  <div class="related-grid">
+    <a href="concept_Thai_Lan.html" class="related-card">
+      <div class="related-thumb">
+        <img src="concept_Han_Quoc/Thái Lan.jpg" alt="">
+      </div>
+      <div class="related-body">
+        <h3 class="related-title">Concept thái lan</h3>
+      </div>
+    </a>
+
+    <a href="concept_thanh_xuan_xam.html" class="related-card">
+      <div class="related-thumb">
+        <img src="concept_Thai_Lan/Thanh Xuân Xám.jpg" alt="">
+      </div>
+      <div class="related-body">
+        <h3 class="related-title">Concept Thanh xuân xám</h3>
+      </div>
+    </a>
+
+    <a href="concept_cu_nhan.html" class="related-card">
+      <div class="related-thumb">
+        <img src="concept_Thai_Lan/Cử Nhân.jpg" alt="">
+      </div>
+      <div class="related-body">
+        <h3 class="related-title">Concept Cử nhân</h3>
+      </div>
+    </a>
+
+    <a href="concept_secretgarden.html" class="related-card">
+      <div class="related-thumb">
+        <img src="concept_Thai_Lan/Secret Garden.jpg" alt="">
+      </div>
+      <div class="related-body">
+        <h3 class="related-title">concept secret garden</h3>
+      </div>
+    </a>
+
+    <a href="concept_Viet_phuc.html" class="related-card">
+      <div class="related-thumb">
+        <img src="concept_Thai_Lan/Việt Phục.jpg" alt="">
+      </div>
+      <div class="related-body">
+        <h3 class="related-title">Concept Việt phục</h3>
+      </div>
+    </a>
+
+    <a href="concept_phao_hoa.html" class="related-card">
+      <div class="related-thumb">
+        <img src="concept_Thai_Lan/Pháo Hoa.jpg" alt="">
+      </div>
+      <div class="related-body">
+        <h3 class="related-title">Concept pháo hoa</h3>
+      </div>
+    </a>
+
+  </div>
+
+ </section>
+<!-- why us -->
+<!-- tại sao chọn chúng tôi  -->
+<section class="why-us" id="whyUsConcept">
+  <div class="why-us__container">
+    <div class="why-us__heading">
+      <div class="why-us__brand">
+      Kỉ yếu Lá Xanh
+      </div>
+    <h2 class="why-us__title">TẠI SAO CHỌN CHÚNG TÔI</h2>
+    </div>
+    <div class="why-us__grid">
+      <!-- item1  -->
+      <article class="why-us__item">
+        <div class="why-us__icon">
+          <img src="anh/ic1.png" alt="Uy tín">
+        </div>
+        <div class="why-us__content">
+          <div class="why-us__num">1</div>
+          <h3 class="why-us__name">Uy tín</h3>
+          <p class="why-us__desc">Tôn chỉ hoạt động của chúng tôi là lấy chữ Tín làm nền tảng, tậ tâm từ những việc nhỏ nhất.</p>
+        </div>
+      </article>
+   <!-- item2  -->
+   <article class="why-us__item">
+    <div class="why-us__icon">
+      <img src="anh/ic2.png" alt="Chuyên nghiệp">
+    </div>
+    <div class="why-us__content">
+      <div class="why-us__num">2</div>
+      <h3 class="why-us__name">Chuyên nghiệp</h3>
+      <p class="why-us__desc">Luôn nâng cao chất lượng dịch vụ, theo sát quy trình để khách hàng có trải nghiệm tốt.</p>
+    </div>
+  </article>
+  <!-- item3  -->
+  <article class="why-us__item">
+    <div class="why-us__icon">
+      <img src="anh/ic3.png" alt="Chất lượng">
+    </div>
+    <div class="why-us__content">
+      <div class="why-us__num">3</div>
+      <h3 class="why-us__name">Chất lượng</h3>
+      <p class="why-us__desc">Nâng cấp thiết bị và quy trình để sản phẩm đầu ra chỉn chu, ổn định.</p>
+    </div>
+  </article>
+   <!-- item4  -->
+   <article class="why-us__item">
+    <div class="why-us__icon">
+      <img src="anh/ic4.png" alt="Nhiệt huyết">
+    </div>
+    <div class="why-us__content">
+      <div class="why-us__num">4</div>
+      <h3 class="why-us__name">Nhiệt huyết</h3>
+      <p class="why-us__desc">Luôn nâng cao chất lượng dịch vụ, theo sát quy trình để khách hàng có trải nghiệm tốt.</p>
+    </div>
+  </article>
+   <!-- item5  -->
+   <article class="why-us__item">
+    <div class="why-us__icon">
+      <img src="anh/ic5.png" alt="Tiến độ">
+    </div>
+    <div class="why-us__content">
+      <div class="why-us__num">5</div>
+      <h3 class="why-us__name">Tiến độ</h3>
+      <p class="why-us__desc"> Phân bổ nhân lực hợp lý để đảm bảo timeline bàn giao như cam kết.</p>
+    </div>
+  </article>
+   <!-- item6  -->
+   <article class="why-us__item">
+    <div class="why-us__icon">
+      <img src="anh/ic6.png" alt="Hiệu quả">
+    </div>
+    <div class="why-us__content">
+      <div class="why-us__num">6</div>
+      <h3 class="why-us__name">Hiệu quả</h3>
+      <p class="why-us__desc">Tập trung vào trải nghiệm và kết quả cuối để khách hàng hài lòng nhất.</p>
+    </div>
+  </article>
+  
+    </div>
+  </div>
+  </section>
+
+     <!-- footer  -->
+<footer>
+    <div class="site-footer__inner">
+      <!-- Côt 1 thông tin liên hệ  -->
+      <div class="footer-col">
+        <h3 class="footer-title">
+          THÔNG TIN LIÊN HỆ
+        </h3>
+        <ul class="footer-list">
+          <li>Địa chỉ: 313/16 Nguyễn Phước Nguyên</li>
+          <li>Bộ phận CSKH: 0702.710.096</li>
+          <li>Email: kyyeulaxanh@gmail.com</li>
+        </ul>
+      </div>
+  
+      <!-- Cột 2 Dịch vụ  -->
+      <div class="footer-col">
+        <h3 class="footer-title">DỊCH VỤ</h3>
+        <ul class="footer-list">
+          <li><a href="bang_gia.html">Bảng giá</a></li>
+          <li><a href="trang_phuc.html">Trang phục</a></li>
+          <li><a href="concept.html">Concept</a></li>
+        </ul>
+      </div>
+  
+      <!-- Cột 3 fanpage  -->
+      <div class="footer-col">
+        <h3 class="footer-title">FANPAGE</h3>
+        <div class="footer-frame">
+          <iframe id="fbPage" src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fchupanhkyyeulaxanh&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=565511351695796" width="340" height="300" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+        </div>
+      </div>
+  
+      <!-- Cột 4 Map  -->
+      <div class="footer-col">
+        <h3 class="footer-title">MAP</h3>
+        <div class="footer-frame">
+          <iframe width="250px" height="250px" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed/v1/place?q=313%20Nguy%E1%BB%85n%20Ph%C6%B0%E1%BB%9Bc%20Nguy%C3%AAn%20%C4%90%C3%A0%20N%E1%BA%B5ng%20Vi%E1%BB%87t%20Nam&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"></iframe>
+        </div>
+  
+        <!-- icon social  -->
+        <div class="footer-social">
+          <a class="social-btn fb" href="https://www.facebook.com/chupanhkyyeulaxanh" target="_blank" rel="noopener" aria-label="Facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a class="social-btn ig" href="https://www.instagram.com/kyyeulaxanh/" target="_blank" rel="noopener" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a class="social-btn tt" href="https://www.tiktok.com/@kyyeulaxanh" target="_blank" rel="noopener" aria-label="TikTok">
+            <i class="fa-brands fa-tiktok"></i>
+          </a>
+          <a class="social-btn mail" href="mailto:kyyeulaxanh@gmail.com" aria-label="Gmail">
+            <i class="fa-solid fa-envelope"></i>
+          </a>
+          <a class="social-btn yt" href="https://www.youtube.com/@KyYeuLaXanh" target="_blank" rel="noopener" aria-label="YouTube">
+            <i class="fa-brands fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- end footer  -->
+  <!-- fixed button  -->
+<div class="floating-contact">
+  <a href="https://www.facebook.com/chupanhkyyeulaxanh"
+  class="floating-contact__btn floating-contact__btn--fb"
+  target="_blank" rel="noopener" aria-label="Facebook">
+ <i class="fa-brands fa-facebook-f"></i>
+</a>
+
+<a class="floating-contact__btn floating-contact__btn--zalo"
+     href="https://zalo.me/0702710096"
+     target="_blank" rel="noopener" aria-label="Zalo">
+    <span class="floating-contact__zalo-text">Zalo</span>
+  </a>
+
+  <a class="floating-contact__call"
+     href="tel:0702710096" aria-label="Gọi 0702710096">
+    <i class="fa-solid fa-phone"></i>
+    <span>0702.710.096</span>
+  </a>
+</div>
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" id="lightboxClose" aria-label="Đóng">&times;</button>
+    <img class="lightbox__img" id="lightboxImg" alt="">
+  </div>
+  <script src="app.js" defer></script>
+    </body>
+</html>

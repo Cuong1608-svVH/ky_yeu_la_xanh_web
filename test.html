@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Album test (smooth wrap)</title>
+
+  <style>
+    .album-section{ width: 60%; margin: 20px auto 60px; font-family: Montserrat, sans-serif; }
+    .album-title{ text-align: center; color:#145436; letter-spacing:2px; margin:18px 0; }
+
+    .album-carousel{ position:relative; display:flex; align-items:center; gap:14px; }
+    .car-viewport{ overflow:hidden; flex:1; border-radius:18px; touch-action: pan-y; }
+
+    .car-track{
+      display:flex;
+      will-change: transform;
+      transition: transform 420ms ease;
+      gap:20px;
+    }
+
+    .car-slide{ flex:0 0 calc((100% - 40px)/3); padding:0; text-decoration:none; }
+
+    .car-slide img{
+      width:100%;
+      aspect-ratio: 3 / 2;
+      object-fit: cover;
+      display:block;
+      border-radius:16px;
+      transform: scale(0.92);
+      opacity:0.78;
+      transition: transform 240ms ease, opacity 240ms ease;
+      background:#eee;
+    }
+    .car-slide.is-center img{ transform: scale(1.06); opacity:1; }
+
+    .car-btn{
+      width:42px; height:42px; border-radius:999px;
+      border:none; cursor:pointer;
+      background: rgba(20,84,54,0.92); color:#fff; font-size:20px;
+      display:grid; place-items:center;
+    }
+
+    /* Tắt transition đúng khoảnh khắc teleport để không bị giật */
+    .album-carousel.is-snapping,
+    .album-carousel.is-snapping *{
+      transition: none !important;
+    }
+
+    /* Viewer */
+    .gallery-viewer{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.82);
+      display:none; align-items:center; justify-content:center;
+      padding:24px; z-index:99999;
+    }
+    .gallery-viewer.show{ display:flex; }
+
+    .gv-stage{ position:relative; margin:0; max-width:min(1200px,92vw); max-height:84vh; }
+    .gv-stage img{
+      width:100%; height:auto; max-height:84vh; object-fit:contain;
+      border-radius:16px; background:#111; display:block;
+    }
+    .gv-counter{
+      position:absolute; left:14px; top:14px;
+      padding:6px 10px; border-radius:999px;
+      background: rgba(0,0,0,0.45); color:#fff; font-size:14px;
+    }
+    .gv-close{
+      position:fixed; top:14px; right:18px;
+      width:46px; height:46px; border:none; border-radius:999px;
+      background: rgba(255,255,255,0.14); color:#fff; font-size:30px;
+      line-height:46px; cursor:pointer;
+    }
+    .gv-nav{
+      width:48px; height:48px; border-radius:999px;
+      border:none; cursor:pointer; color:#fff;
+      background: rgba(255,255,255,0.14); font-size:22px;
+    }
+    .gv-prev{ margin-right:12px; }
+    .gv-next{ margin-left:12px; }
+
+    @media (max-width:900px){
+      .album-section{ width:95%; }
+      .car-track{ gap:12px; }
+      .car-slide{ flex:0 0 calc((100% - 24px)/3); }
+      .car-btn{ width:38px; height:38px; }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="album-section">
+    <h2 class="album-title">ALBUM ẢNH</h2>
+
+    <div class="album-carousel" id="albumCarousel" aria-label="Album carousel">
+      <button class="car-btn prev" type="button" aria-label="Ảnh trước">&#10094;</button>
+
+      <div class="car-viewport">
+        <div class="car-track" id="carTrack">
+          <a href="concept_Thai_Lan/concept_Thai_Lan_1.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_1.jpg" alt="1"></a>
+          <a href="concept_Thai_Lan/concept_Thai_Lan_2.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_2.jpg" alt="2"></a>
+          <a href="concept_Thai_Lan/concept_Thai_Lan_3.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_3.jpg" alt="3"></a>
+          <a href="concept_Thai_Lan/concept_Thai_Lan_4.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_4.jpg" alt="4"></a>
+          <a href="concept_Thai_Lan/concept_Thai_Lan_5.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_5.jpg" alt="5"></a>
+          <a href="concept_Thai_Lan/concept_Thai_Lan_6.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_6.jpg" alt="6"></a>
+          <a href="concept_Thai_Lan/concept_Thai_Lan_7.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_7.jpg" alt="7"></a>
+          <a href="concept_Thai_Lan/concept_Thai_Lan_8.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_8.jpg" alt="8"></a>
+          <a href="concept_Thai_Lan/concept_Thai_Lan_9.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_9.jpg" alt="9"></a>
+          <a href="concept_Thai_Lan/concept_Thai_Lan_10.jpg" class="car-slide"><img src="concept_Thai_Lan/concept_Thai_Lan_10.jpg" alt="10"></a>
+        </div>
+      </div>
+
+      <button class="car-btn next" type="button" aria-label="Ảnh tiếp theo">&#10095;</button>
+    </div>
+  </section>
+
+  <div class="gallery-viewer" id="galleryViewer" aria-hidden="true">
+    <button class="gv-close" id="gvClose" type="button" aria-label="Đóng">&times;</button>
+    <button class="gv-nav gv-prev" id="gvPrev" type="button" aria-label="Ảnh trước">&#10094;</button>
+
+    <figure class="gv-stage">
+      <img id="gvImg" alt="">
+      <figcaption class="gv-counter" id="gvCounter">1/10</figcaption>
+    </figure>
+
+    <button class="gv-nav gv-next" id="gvNext" type="button" aria-label="Ảnh tiếp theo">&#10095;</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const carousel = document.getElementById('albumCarousel');
+      const track = document.getElementById('carTrack');
+      if (!carousel || !track) return;
+
+      const prevBtn = carousel.querySelector('.car-btn.prev');
+      const nextBtn = carousel.querySelector('.car-btn.next');
+      const viewport = carousel.querySelector('.car-viewport');
+      if (!prevBtn || !nextBtn || !viewport) return;
+
+      const viewer = document.getElementById('galleryViewer');
+      const gvImg = document.getElementById('gvImg');
+      const gvCounter = document.getElementById('gvCounter');
+      const gvClose = document.getElementById('gvClose');
+      const gvPrev = document.getElementById('gvPrev');
+      const gvNext = document.getElementById('gvNext');
+
+      const originalSlides = Array.from(track.querySelectorAll('.car-slide'));
+      const total = originalSlides.length;
+      if (total < 3) return;
+
+      const CLONE = 3;
+
+      // clone 3 ảnh mỗi đầu
+      const headClones = originalSlides.slice(0, CLONE).map(s => s.cloneNode(true));
+      const tailClones = originalSlides.slice(-CLONE).map(s => s.cloneNode(true));
+
+      // prepend giữ đúng thứ tự 8,9,10
+      track.prepend(...tailClones);
+      track.append(...headClones);
+
+      let slides = Array.from(track.querySelectorAll('.car-slide'));
+
+      // mặc định thấy 1-2-3 => center là ảnh thật #2
+      let centerIndex = CLONE + 1;
+      let isAnimating = false;
+
+      function setCenterClass() {
+        slides.forEach(s => s.classList.remove('is-center'));
+        slides[centerIndex]?.classList.add('is-center');
+      }
+
+      function translateToCenter(animate = true) {
+        // NOTE: khi teleport sẽ đi qua is-snapping nên transition bị tắt toàn cục
+        track.style.transition = animate ? 'transform 420ms ease' : 'none';
+        const leftIndex = centerIndex - 1;
+        const left = slides[leftIndex]?.offsetLeft ?? 0;
+        track.style.transform = `translate3d(-${Math.round(left)}px, 0, 0)`;
+        setCenterClass();
+      }
+
+      function snapToCurrent() {
+        // tắt transition đúng 1 nhịp và teleport ngay lập tức
+        carousel.classList.add('is-snapping');
+        translateToCenter(false);
+
+        // force reflow để browser apply ngay trạng thái không-transition [web:425]
+        track.getBoundingClientRect();
+
+        carousel.classList.remove('is-snapping');
+      }
+
+      function toRealNumber(idx) {
+        let n = (idx - CLONE) + 1;
+        while (n < 1) n += total;
+        while (n > total) n -= total;
+        return n;
+      }
+
+      function goNext() {
+        if (isAnimating) return;
+        isAnimating = true;
+        centerIndex += 1;
+        translateToCenter(true);
+      }
+
+      function goPrev() {
+        if (isAnimating) return;
+        isAnimating = true;
+        centerIndex -= 1;
+        translateToCenter(true);
+      }
+
+      nextBtn.addEventListener('click', goNext);
+      prevBtn.addEventListener('click', goPrev);
+
+      // wrap + snap ngay trong transitionend (không dùng rAF để tránh lộ 1 frame) [web:526]
+      track.addEventListener('transitionend', (e) => {
+        if (e.target !== track) return;
+        if (e.propertyName !== 'transform') return; // [web:538]
+
+        if (centerIndex < CLONE) centerIndex += total;
+        else if (centerIndex >= slides.length - CLONE) centerIndex -= total;
+
+        snapToCurrent();
+        isAnimating = false;
+      });
+
+      // init sau khi ảnh load để layout ổn
+      function init() { snapToCurrent(); }
+
+      const imgs = Array.from(track.querySelectorAll('img'));
+      let pending = imgs.length;
+      if (pending === 0) init();
+      else imgs.forEach(img => {
+        if (img.complete) { if (--pending === 0) init(); }
+        else {
+          img.addEventListener('load', () => { if (--pending === 0) init(); }, { once:true });
+          img.addEventListener('error', () => { if (--pending === 0) init(); }, { once:true });
+        }
+      });
+
+      window.addEventListener('resize', init);
+
+      // swipe đơn giản
+      let startX = 0, startY = 0, dragging = false;
+      viewport.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length !== 1) return;
+        dragging = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+
+      viewport.addEventListener('touchend', (e) => {
+        if (!dragging) return;
+        dragging = false;
+
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+        const dx = endX - startX;
+        const dy = endY - startY;
+
+        if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy)) return;
+        if (dx < 0) goNext();
+        else goPrev();
+      }, { passive: true });
+
+      // viewer
+      if (viewer && gvImg && gvCounter && gvClose && gvPrev && gvNext) {
+        let viewerIndex = 1;
+
+        function renderViewer() {
+          const slide = originalSlides[viewerIndex - 1];
+          const img = slide.querySelector('img');
+          const href = slide.getAttribute('href') || img?.getAttribute('src');
+          gvImg.src = href;
+          gvImg.alt = img?.alt || `Ảnh ${viewerIndex}`;
+          gvCounter.textContent = `${viewerIndex}/${total}`;
+        }
+
+        function openViewer(n) {
+          viewerIndex = n;
+          viewer.classList.add('show');
+          viewer.setAttribute('aria-hidden', 'false');
+          renderViewer();
+        }
+
+        function closeViewer() {
+          viewer.classList.remove('show');
+          viewer.setAttribute('aria-hidden', 'true');
+        }
+
+        function viewerNext() { viewerIndex = viewerIndex >= total ? 1 : viewerIndex + 1; renderViewer(); }
+        function viewerPrev() { viewerIndex = viewerIndex <= 1 ? total : viewerIndex - 1; renderViewer(); }
+
+        track.addEventListener('click', (e) => {
+          const a = e.target.closest('a.car-slide');
+          if (!a) return;
+          e.preventDefault();
+
+          const href = a.getAttribute('href');
+          const realIdx = originalSlides.findIndex(s => s.getAttribute('href') === href);
+          openViewer(realIdx >= 0 ? realIdx + 1 : toRealNumber(centerIndex));
+        });
+
+        gvClose.addEventListener('click', closeViewer);
+        gvNext.addEventListener('click', viewerNext);
+        gvPrev.addEventListener('click', viewerPrev);
+
+        viewer.addEventListener('click', (e) => {
+          if (e.target === viewer) closeViewer();
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (!viewer.classList.contains('show')) return;
+          if (e.key === 'Escape') closeViewer();
+          if (e.key === 'ArrowRight') viewerNext();
+          if (e.key === 'ArrowLeft') viewerPrev();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

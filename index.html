@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kỷ yếu lá xanh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+   
+
+</head>
+<body>
+   
+   <!-- navbar -->
+<nav class="navbar navbar--hero" id="navbar">
+  <div class="navbar-inner">
+
+    <!-- LEFT: desktop -->
+    <ul class="nav-left" id="navLeft">
+      <li><a href="index.html">Trang chủ</a></li>
+
+      <li class="dropdown">
+        <a href="bang_gia.html">
+          <span>Bảng giá</span>
+          <i class="fa-solid fa-chevron-down dropdown-toggle-icon"></i>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="bang_gia_Da_Nang.html">Đà Nẵng</a></li>
+          <li><a href="bang_gia_Quang_Ngai.html">Quảng Ngãi</a></li>
+          <li><a href="bang_gia_cac_tinh_khac.html">Các tỉnh khác</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <!-- CENTER: Logo -->
+    <a href="index.html" class="logo-center" aria-label="Trang chủ">
+      <img src="anh/header_logo_.png" alt="Kỉ yếu lá xanh">
+    </a>
+
+    <!-- RIGHT: desktop -->
+    <ul class="nav-right" id="navRight">
+      <li class="dropdown">
+        <a href="trang_phuc.html">
+          <span>Trang phục</span>
+        </a>      
+      </li>
+
+      <li><a href="concept.html">Concept</a></li>
+
+      <li class="hotline-inline">
+        <a href="tel:0702710096">
+          <i class="fa-solid fa-phone"></i> 0702.710.096
+        </a>
+      </li>
+    </ul>
+
+    <!-- Hamburger (mobile) -->
+    <div class="hamburger" id="hamburger" aria-label="Menu" aria-controls="navbar-menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Overlay cho mobile (để ngoài nav cho chắc chắn phủ full màn hình) -->
+<div class="overlay" id="overlay"></div>
+
+<!-- Mobile sidebar menu (NEW) -->
+<ul class="navbar-menu" id="navbar-menu">
+  <li><a href="index.html">Trang chủ</a></li>
+
+  <li class="dropdown">
+    <a href="bang_gia.html">
+      <span>Bảng giá</span>
+      <i class="fa-solid fa-chevron-down dropdown-toggle-icon"></i>
+    </a>
+    <ul class="dropdown-menu">
+      <li><a href="bang_gia_Da_Nang.html">Đà Nẵng</a></li>
+      <li><a href="bang_gia_Quang_Ngai.html">Quảng Ngãi</a></li>
+      <li><a href="bang_gia_cac_tinh_khac.html">Các tỉnh khác</a></li>
+    </ul>
+  </li>
+
+  <li class="dropdown">
+    <a href="trang_phuc.html">
+      <span>Trang phục</span>
+    </a>  
+  </li>
+
+  <li><a href="concept.html">Concept</a></li>
+
+
+</ul>
+
+    
+   <!-- end navbar -->
+   <!-- slider -->
+   <div class="slider-wrapper">
+    <div class="slider" id="slider">
+         <!-- Clone của slide 3 để seamless loop khi prev từ slide 1 -->
+      <div class="slide">
+        <img src="anh/QN-279K(2).jpg" alt="Slide 3 (Clone)">
+    </div>
+        <div class="slide">
+            <img src="anh/QN-TongHop.jpg" alt="Slide 1">
+        </div>
+        <div class="slide">
+            <img src="anh/QN-159K(2).jpg" alt="Slide 2">
+        </div>
+        <div class="slide">
+            <img src="anh/QN-279K(2).jpg" alt="Slide 3">
+        </div>
+         <!-- Clone của slide 1 để seamless loop -->
+      <div class="slide">
+        <img src="anh/QN-TongHop.jpg" alt="Slide 1 (Clone)">
+    </div>
+       
+    </div>
+    <button class="slider-btn prev" id="prevBtn">
+        &#10094;
+    </button>
+    <button class="slider-btn next" id="nextBtn">
+        &#10095;
+    </button>
+    <div class="slider-dots" id="sliderDots"></div>
+   </div>
+   <!-- giới thiệu dịch vụ  -->
+   <section class="service-intro">
+    <h2>Dịch vụ tại Kỉ yếu Lá Xanh</h2>
+    <p>Kỉ yếu Lá Xanh - Nơi lưu trữ khoảnh khắc đẹp và ấn tượng nhất</p>
+    <p>Chất lượng - Uy tín - Nhiệt huyết làm nên phong cách chuyên nghiệp của Kỉ yếu Lá Xanh</p>
+   </section>
+   <!-- thanh gạch ngang  -->
+   <div class="bottom_png">
+    <img src="anh/bottom.png" >
+   </div>
+
+  <!-- box ảnh  -->
+<section class="service-tabs-wrapper">
+    <!-- Tiêu đề : Chụp ảnh kỷ yếu , Cho thuê trang phục  -->
+    <div class="service-tabs">
+      <button class="tab-link active" data-target="tab-kyyeu">
+        Bảng giá
+      </button>
+      <button class="tab-link" data-target="tab-trangphuc">
+        Trang phục
+      </button>
+    </div>
+  
+    <!-- Wrapper chứa cả 2 panel -->
+    <div class="tab-panels">
+  
+      <!-- Panel 1: Bảng giá -->
+      <div class="tab-panel active" id="tab-kyyeu">
+        <!-- box 1   đà nẵng -->
+        <a href="bang_gia_Da_Nang.html" class="service-card">
+          <img src="anh/DN-TongHop.jpg" alt="Bảng giá Đà Nẵng">
+          <div class="card-overlay">
+            <span>ĐÀ NẴNG</span>
+            <button>Xem thêm</button>
+          </div>
+        </a>
+        <!-- box 2  quảng ngãi-->
+        <a href="bang_gia_Quang_Ngai.html" class="service-card">
+          <img src="anh/QN-TongHop.jpg" alt="Bảng giá Quảng Ngãi">
+          <div class="card-overlay">
+            <span>QUẢNG NGÃI</span>
+            <button>Xem thêm</button>
+          </div>
+        </a>
+        <!-- box 3 các tỉnh khác  -->
+        <a href="bang_gia_cac_tinh_khac.html" class="service-card">
+          <img src="anh/QN-TongHop.jpg" alt="Bảng giá các tỉnh khác">
+          <div class="card-overlay">
+            <span>CÁC TỈNH KHÁC</span>
+            <button>Xem thêm</button>
+          </div>
+        </a>
+      </div>
+  
+      <!-- Panel 2: trang phục -->
+      <div class="tab-panel" id="tab-trangphuc">
+        <!-- box 1  -->
+        <a href="" class="service-card">
+          <img src="anh/Tr_phuc_thanh_xuan_xam.png" alt="THANH XUÂN XÁM">
+          <div class="card-overlay">
+            <span>THANH XUÂN XÁM</span>
+            <button>Xem thêm</button>
+          </div>
+        </a>
+        <!-- box 2  -->
+        <a href="" class="service-card">
+          <img src="anh/Tr_phuc_cu_nhan.png" alt="CỬ NHÂN">
+          <div class="card-overlay">
+            <span>CỬ NHÂN</span>
+            <button>Xem thêm</button>
+          </div>
+        </a>
+        <!-- box 3  -->
+        <a href="" class="service-card">
+          <img src="anh/Tr_phuc_viet_phuc.png" alt="VIỆT PHỤC">
+          <div class="card-overlay">
+            <span>VIỆT PHỤC</span>
+            <button>Xem thêm</button>
+          </div>
+        </a>
+      </div>
+  
+    </div>
+  </section>
+
+<!-- banner ảnh -->
+<section class="banner-3">
+  <a href="anh/banner_left.jpg" class="banner-3__item left js-lightbox">
+    <img src="anh/banner_left.jpg" alt="Banner left">
+  </a>
+
+  <a href="anh/banner_center.jpg" class="banner-3__item center js-lightbox">
+    <img src="anh/banner_center.jpg" alt="Banner center">
+  </a>
+
+  <a href="anh/banner_rigfht.jpg" class="banner-3__item right js-lightbox">
+    <img src="anh/banner_rigfht.jpg" alt="Banner right">
+  </a>
+</section>
+
+<!-- banner album nổi bật -->
+<section class="banner-2text">
+  <div class="banner-2text__text">
+    <div class="badge">Kỉ yếu lá xanh</div>
+    <h3>Concept nổi bật</h3>
+    <p>Một số concept chụp ảnh kỷ yếu đẹp của khách hàng nhà Kỉ yếu Lá Xanh.</p>
+    <a href="concept.html" class="banner-2text__more">Xem thêm</a>
+  </div>
+
+  <a href="anh/album_banner1.jpg" class="banner-2text__item js-lightbox">
+    <img src="anh/album_banner1.jpg" alt="">
+  </a>
+
+  <a href="anh/album_banner2.jpg" class="banner-2text__item js-lightbox">
+    <img src="anh/album_banner2.jpg" alt="">
+  </a>
+</section>
+
+<!-- tại sao chọn chúng tôi  -->
+<section class="why-us">
+<div class="why-us__container">
+  <div class="why-us__heading">
+    <div class="why-us__brand">
+    Kỉ yếu Lá Xanh
+    </div>
+  <h2 class="why-us__title">TẠI SAO CHỌN CHÚNG TÔI</h2>
+  </div>
+  <div class="why-us__grid">
+    <!-- item1  -->
+    <article class="why-us__item">
+      <div class="why-us__icon">
+        <img src="anh/ic1.png" alt="Uy tín">
+      </div>
+      <div class="why-us__content">
+        <div class="why-us__num">1</div>
+        <h3 class="why-us__name">Uy tín</h3>
+        <p class="why-us__desc">Tôn chỉ hoạt động của chúng tôi là lấy chữ Tín làm nền tảng, tậ tâm từ những việc nhỏ nhất.</p>
+      </div>
+    </article>
+ <!-- item2  -->
+ <article class="why-us__item">
+  <div class="why-us__icon">
+    <img src="anh/ic2.png" alt="Chuyên nghiệp">
+  </div>
+  <div class="why-us__content">
+    <div class="why-us__num">2</div>
+    <h3 class="why-us__name">Chuyên nghiệp</h3>
+    <p class="why-us__desc">Luôn nâng cao chất lượng dịch vụ, theo sát quy trình để khách hàng có trải nghiệm tốt.</p>
+  </div>
+</article>
+<!-- item3  -->
+<article class="why-us__item">
+  <div class="why-us__icon">
+    <img src="anh/ic3.png" alt="Chất lượng">
+  </div>
+  <div class="why-us__content">
+    <div class="why-us__num">3</div>
+    <h3 class="why-us__name">Chất lượng</h3>
+    <p class="why-us__desc">Nâng cấp thiết bị và quy trình để sản phẩm đầu ra chỉn chu, ổn định.</p>
+  </div>
+</article>
+ <!-- item4  -->
+ <article class="why-us__item">
+  <div class="why-us__icon">
+    <img src="anh/ic4.png" alt="Nhiệt huyết">
+  </div>
+  <div class="why-us__content">
+    <div class="why-us__num">4</div>
+    <h3 class="why-us__name">Nhiệt huyết</h3>
+    <p class="why-us__desc">Luôn nâng cao chất lượng dịch vụ, theo sát quy trình để khách hàng có trải nghiệm tốt.</p>
+  </div>
+</article>
+ <!-- item5  -->
+ <article class="why-us__item">
+  <div class="why-us__icon">
+    <img src="anh/ic5.png" alt="Tiến độ">
+  </div>
+  <div class="why-us__content">
+    <div class="why-us__num">5</div>
+    <h3 class="why-us__name">Tiến độ</h3>
+    <p class="why-us__desc"> Phân bổ nhân lực hợp lý để đảm bảo timeline bàn giao như cam kết.</p>
+  </div>
+</article>
+ <!-- item6  -->
+ <article class="why-us__item">
+  <div class="why-us__icon">
+    <img src="anh/ic6.png" alt="Hiệu quả">
+  </div>
+  <div class="why-us__content">
+    <div class="why-us__num">6</div>
+    <h3 class="why-us__name">Hiệu quả</h3>
+    <p class="why-us__desc">Tập trung vào trải nghiệm và kết quả cuối để khách hàng hài lòng nhất.</p>
+  </div>
+</article>
+
+  </div>
+</div>
+</section>
+
+<!-- footer  -->
+<footer>
+  <div class="site-footer__inner">
+    <!-- Côt 1 thông tin liên hệ  -->
+    <div class="footer-col">
+      <h3 class="footer-title">
+        THÔNG TIN LIÊN HỆ
+      </h3>
+      <ul class="footer-list">
+        <li>Địa chỉ: 313/16 Nguyễn Phước Nguyên</li>
+        <li>Bộ phận CSKH: 0702.710.096</li>
+        <li>Email: kyyeulaxanh@gmail.com</li>
+      </ul>
+    </div>
+
+    <!-- Cột 2 Dịch vụ  -->
+    <div class="footer-col">
+      <h3 class="footer-title">DỊCH VỤ</h3>
+      <ul class="footer-list">
+        <li><a href="bang_gia.html">Bảng giá</a></li>
+        <li><a href="trang_phuc.html">Trang phục</a></li>
+        <li><a href="concept.html">Concept</a></li>
+      </ul>
+    </div>
+
+    <!-- Cột 3 fanpage  -->
+    <div class="footer-col">
+      <h3 class="footer-title">FANPAGE</h3>
+      <div class="footer-frame">
+        <iframe id="fbPage" src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fchupanhkyyeulaxanh&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=565511351695796" width="340" height="300" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+      </div>
+    </div>
+
+    <!-- Cột 4 Map  -->
+    <div class="footer-col">
+      <h3 class="footer-title">MAP</h3>
+      <div class="footer-frame">
+        <iframe width="250px" height="250px" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed/v1/place?q=313%20Nguy%E1%BB%85n%20Ph%C6%B0%E1%BB%9Bc%20Nguy%C3%AAn%20%C4%90%C3%A0%20N%E1%BA%B5ng%20Vi%E1%BB%87t%20Nam&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"></iframe>
+      </div>
+
+      <!-- icon social  -->
+      <div class="footer-social">
+        <a class="social-btn fb" href="https://www.facebook.com/chupanhkyyeulaxanh" target="_blank" rel="noopener" aria-label="Facebook">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a class="social-btn ig" href="https://www.instagram.com/kyyeulaxanh/" target="_blank" rel="noopener" aria-label="Instagram">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a class="social-btn tt" href="https://www.tiktok.com/@kyyeulaxanh" target="_blank" rel="noopener" aria-label="TikTok">
+          <i class="fa-brands fa-tiktok"></i>
+        </a>
+        <a class="social-btn mail" href="mailto:kyyeulaxanh@gmail.com" aria-label="Gmail">
+          <i class="fa-solid fa-envelope"></i>
+        </a>
+        <a class="social-btn yt" href="https://www.youtube.com/@KyYeuLaXanh" target="_blank" rel="noopener" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- end footer  -->
+<!-- fixed button  -->
+<div class="floating-contact">
+  <a href="https://www.facebook.com/chupanhkyyeulaxanh"
+  class="floating-contact__btn floating-contact__btn--fb"
+  target="_blank" rel="noopener" aria-label="Facebook">
+ <i class="fa-brands fa-facebook-f"></i>
+</a>
+
+<a class="floating-contact__btn floating-contact__btn--zalo"
+     href="https://zalo.me/0702710096"
+     target="_blank" rel="noopener" aria-label="Zalo">
+    <span class="floating-contact__zalo-text">Zalo</span>
+  </a>
+
+  <a class="floating-contact__call"
+     href="tel:0702710096" aria-label="Gọi 0702710096">
+    <i class="fa-solid fa-phone"></i>
+    <span>0702.710.096</span>
+  </a>
+</div>
+
+
+<!-- lightbox cho phần xem ảnh trong album nổi bật  -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Đóng">&times;</button>
+  <img class="lightbox__img" id="lightboxImg" alt="">
+</div>
+<script src="app.js"></script>
+
+
+</body>
+</html>
